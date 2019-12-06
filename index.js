@@ -6,7 +6,7 @@ const globby = require('globby')
 
 module.exports = {
   name: '@netlify/plugin-sitemap',
-  postBuild: async ({ constants, pluginConfig }) => {
+  onPostBuild: async ({ constants, pluginConfig }) => {
     const baseUrl = pluginConfig.baseUrl || process.env.SITE
     const buildDir = pluginConfig.dir || constants.BUILD_DIR
     if (!baseUrl) {
