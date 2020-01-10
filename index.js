@@ -6,9 +6,15 @@ const globby = require('globby')
 
 module.exports = {
   name: '@netlify/plugin-sitemap',
-  onPostBuild: async ({ constants, pluginConfig }) => {
-    const baseUrl = pluginConfig.baseUrl || process.env.SITE
-    const buildDir = pluginConfig.dir || constants.BUILD_DIR
+  onPostBuild: async ({ constants, pluginConfig, netlifyConfig }) => {
+    const baseUrl = pluginConfig.baseUrl || process.env.URL
+    const buildConfig = netlifyConfig.build || {}
+    // Backwards compat... Correct opt is buildDir
+    const buildDistOpt = pluginConfig.dir || pluginConfig.distPath || pluginConfig.buildDir
+    const buildDir = buildDistOpt || buildConfig.publish || constants.BUILD_DIR
+    if (!buildDir) {
+      throw new Error('Sitemap plugin missing build directory value')
+    }
     if (!baseUrl) {
       throw new Error('Sitemap plugin missing homepage value')
     }
