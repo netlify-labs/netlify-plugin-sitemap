@@ -2,6 +2,12 @@
 
 Automatically generate a sitemap for your site.
 
+## Installation
+
+```
+npm install @netlify/plugin-sitemap --save-dev
+```
+
 ## How to use
 
 In your netlify config file add:
