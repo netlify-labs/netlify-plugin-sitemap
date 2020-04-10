@@ -24,3 +24,19 @@ package = "@netlify/plugin-sitemap"
   [plugins.inputs]
   buildDir = "public"
 ```
+
+### Excluding files from sitemap
+
+```toml
+[[plugins]]
+package = "@netlify/plugin-sitemap"
+
+  [plugins.inputs]
+  buildDir = "public"
+  exclude = [
+    # By file Path
+    './build-dir/path-to/file.html',
+    # By Glob pattern
+    '**/**/child-one.html'
+  ]
+```
