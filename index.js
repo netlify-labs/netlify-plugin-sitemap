@@ -1,6 +1,7 @@
 /* Generates a sitemap */
 const fs = require('fs')
 const path = require('path')
+const mkdirp = require('mkdirp')
 const sm = require('sitemap')
 const globby = require('globby')
 
@@ -12,6 +13,8 @@ module.exports = {
     // Backwards compat... Correct opt is buildDir
     const buildDistOpt = pluginConfig.dir || pluginConfig.distPath || pluginConfig.buildDir
     const buildDir = buildDistOpt || buildConfig.publish || constants.BUILD_DIR
+    const excludeFiles = pluginConfig.exclude || []
+
     if (!buildDir) {
       throw new Error('Sitemap plugin missing build directory value')
     }
@@ -19,17 +22,29 @@ module.exports = {
       throw new Error('Sitemap plugin missing homepage value')
     }
     console.log('Creating sitemap from files...')
-    await makeSitemap({ homepage: baseUrl, distPath: buildDir })
+
+    const data = await makeSitemap({
+      homepage: baseUrl,
+      distPath: buildDir,
+      exclude: excludeFiles
+    })
+
+    console.log('Sitemap Built!', data.sitemapFile)
   },
 }
 
 async function makeSitemap(opts = {}) {
-  const { distPath, fileName, homepage } = opts
+  const { distPath, fileName, homepage, exclude } = opts
   if (!distPath) {
     throw new Error('Missing distPath option')
   }
   const htmlFiles = `${distPath}/**/**.html`
-  const paths = await globby([htmlFiles])
+  const excludeFiles = (exclude || []).map((filePath) => {
+    return `!${filePath.replace(/^!/, '')}`
+  })
+
+  const lookup = [ htmlFiles ].concat(excludeFiles)
+  const paths = await globby(lookup)
   const urls = paths.map(file => {
     const regex = new RegExp(`^${distPath}`)
     const urlPath = file.replace(regex, '')
@@ -58,7 +73,16 @@ async function makeSitemap(opts = {}) {
   const xml = sitemap.toString()
   // write sitemap to file
   const sitemapFileName = fileName || 'sitemap.xml'
-  const sitemapFile = path.join(distPath, sitemapFileName)
+  const sitemapFile = path.resolve(distPath, sitemapFileName)
+  // Ensure dist path
+  await mkdirp(distPath)
+  // Write sitemap
   fs.writeFileSync(sitemapFile, xml, 'utf-8')
-  console.log('Sitemap Built!', sitemapFile)
+  // Return info
+  return {
+    sitemapPath: sitemapFileName,
+    sitemap: sitemap
+  }
 }
+
+module.exports.makeSitemap = makeSitemap

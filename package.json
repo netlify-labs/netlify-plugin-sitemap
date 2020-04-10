@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "test": "ava -v",
+    "watch": "npm test -- --watch -v",
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
     "release:major": "npm version major && npm publish"
@@ -12,13 +14,25 @@
     "netlify",
     "netlify-plugin"
   ],
-  "author": "",
+  "files": [
+    "index.js",
+    "package.json",
+    "package-lock.json",
+    "README.md"
+  ],
+  "author": "David Wells",
   "license": "MIT",
   "dependencies": {
     "globby": "^10.0.1",
+    "mkdirp": "^1.0.4",
     "sitemap": "^3.2.2"
   },
   "engines": {
     "node": ">=8.12.0"
+  },
+  "devDependencies": {
+    "ava": "^2.1.0",
+    "rimraf": "^3.0.2",
+    "xml2js": "^0.4.23"
   }
 }

@@ -5,6 +5,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# Tests
+tests/fixtures/sitemap.xml
+
 # Runtime data
 pids
 *.pid
