@@ -1,44 +1,26 @@
 # Netlify sitemap plugin
 
-Automatically generate a sitemap for your site on `PostBuild` in Netlify.
+Automatically generate a sitemap for your site after it finishes building in Netlify.
 
 ## Installation
 
-```
-npm install @netlify/plugin-sitemap --save-dev
-```
+To install, add the following lines to your `netlify.toml` file:
 
-## How to use
-
-In your netlify config file add the plugin to the `plugins` block.
-
-```yml
-# netlify.yml file
-plugins:
-  - package: '@netlify/plugin-sitemap'
+```toml
+[[plugins]]
+package = "@netlify/plugin-sitemap"
 ```
 
-Here is a larger example configuration file.
-
-```yml
-# netlify.yml file
-
-# Build Settings
-build:
-  publish: build
-
-# Build plugins attached to build process
-plugins:
-  - package: '@netlify/plugin-sitemap'
-```
+Note: The `[[plugins]]` line is required for each plugin, even if you have other plugins in your `netlify.toml` file already.
 
 ## Configuration
 
-Configure the plugin `buildDir`. Default is the `build.publish` value from Netlify config.
+Configure the plugin `buildDir`. Default is the `publish` directory from your site build settings.
 
-```yml
-plugins:
-  - package: '@netlify/plugin-sitemap'
-    config:
-      buildDir: build
+```toml
+[[plugins]]
+package = "@netlify/plugin-sitemap"
+
+  [plugins.inputs]
+  buildDir = "public"
 ```
