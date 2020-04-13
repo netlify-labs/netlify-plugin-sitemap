@@ -1,0 +1,12 @@
+name: netlify-plugin-sitemap
+inputs:
+  - name: baseUrl
+    # description: Site's home URL. Defaults to Netlify's SITE URL.
+  - name: buildDir
+    # description: Publish directory. Defaults to Netlify's publish directory.
+  - name: exclude
+    # description: Excluded files.
+    default: []
+  - name: prettyURLs
+    # description: Enable pretty URLS
+    default: true
