@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "pretest": "ava --reset-cache",
     "test": "ava -v",
     "watch": "npm test -- --watch -v",
     "release:patch": "npm version patch && npm publish",
