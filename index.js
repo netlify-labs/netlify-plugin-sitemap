@@ -26,7 +26,8 @@ module.exports = {
     const data = await makeSitemap({
       homepage: baseUrl,
       distPath: buildDir,
-      exclude: excludeFiles
+      exclude: excludeFiles,
+      prettyURLs: pluginConfig.prettyURLs
     })
 
     console.log('Sitemap Built!', data.sitemapFile)
@@ -34,7 +35,9 @@ module.exports = {
 }
 
 async function makeSitemap(opts = {}) {
-  const { distPath, fileName, homepage, exclude } = opts
+  const { distPath, fileName, homepage, exclude, prettyURLs } = opts
+  // eslint-disable-next-line
+  const prettyUrlsEnabled = (prettyURLs === false || prettyURLs === 'false') ? false : true
   if (!distPath) {
     throw new Error('Missing distPath option')
   }
@@ -47,7 +50,11 @@ async function makeSitemap(opts = {}) {
   const paths = await globby(lookup)
   const urls = paths.map(file => {
     const regex = new RegExp(`^${distPath}`)
-    const urlPath = file.replace(regex, '')
+    let urlPath = file.replace(regex, '')
+    if (prettyUrlsEnabled) {
+      urlPath = urlPath.replace(/\/index\.html$/, '').replace(/\.html$/, '')
+    }
+
     return {
       url: urlPath,
       changefreq: 'weekly',

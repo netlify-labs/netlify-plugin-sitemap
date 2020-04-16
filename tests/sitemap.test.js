@@ -28,6 +28,33 @@ test.serial('Creates Sitemap with all html files', async (t) => {
   const pages = getPages(xmlData)
   t.truthy(sitemapData.sitemapPath)
   t.deepEqual(pages, [
+    'https://site.com/',
+    'https://site.com/page-one',
+    'https://site.com/page-three',
+    'https://site.com/page-two',
+    'https://site.com/children/child-one',
+    'https://site.com/children/child-two',
+    'https://site.com/children/grandchildren/grandchild-one',
+    'https://site.com/children/grandchildren/grandchild-two',
+  ])
+})
+
+test.serial('Sitemap pretty urls off works correctly', async (t) => {
+  let xmlData
+  let sitemapData = {}
+  try {
+    sitemapData = await makeSitemap({
+      homepage: 'https://site.com/',
+      distPath: BUILDPATH,
+      prettyURLs: false
+    })
+    xmlData = await parseXml(SITEMAP_OUTPUT)
+  } catch (err) {
+    console.log(err)
+  }
+  const pages = getPages(xmlData)
+  t.truthy(sitemapData.sitemapPath)
+  t.deepEqual(pages, [
     'https://site.com/index.html',
     'https://site.com/page-one.html',
     'https://site.com/page-three.html',
@@ -61,13 +88,13 @@ test.serial('Sitemap exclude works correctly', async (t) => {
   const pages = getPages(xmlData)
   t.truthy(sitemapData.sitemapPath)
   t.deepEqual(pages, [
-    'https://site.com/index.html',
-    'https://site.com/page-one.html',
-    'https://site.com/page-three.html',
-    'https://site.com/page-two.html',
+    'https://site.com/',
+    'https://site.com/page-one',
+    'https://site.com/page-three',
+    'https://site.com/page-two',
     // excluded 'https://site.com/children/child-one.html',
-    'https://site.com/children/child-two.html',
-    'https://site.com/children/grandchildren/grandchild-one.html',
+    'https://site.com/children/child-two',
+    'https://site.com/children/grandchildren/grandchild-one',
     // excluded 'https://site.com/children/grandchildren/grandchild-two.html'
   ])
 })
