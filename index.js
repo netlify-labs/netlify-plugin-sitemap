@@ -1,5 +1,5 @@
 /* Generates a sitemap */
-const makeSiteMap = require('./make_sitemap')
+const makeSitemap = require('./make_sitemap')
 
 module.exports = {
   onPostBuild: async ({ constants, inputs, utils }) => {
