@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import test from 'ava'
 import rimraf from 'rimraf'
-import { makeSitemap } from '../'
+import makeSitemap from '../make_sitemap.js'
 import { parseString } from 'xml2js'
 
 const BUILDPATH = path.resolve(__dirname, './fixtures')
@@ -20,6 +20,8 @@ test.serial('Creates Sitemap with all html files', async (t) => {
     sitemapData = await makeSitemap({
       homepage: 'https://site.com/',
       distPath: BUILDPATH,
+      prettyURLs: true,
+      failPlugin() {},
     })
     xmlData = await parseXml(SITEMAP_OUTPUT)
   } catch (err) {
@@ -46,7 +48,8 @@ test.serial('Sitemap pretty urls off works correctly', async (t) => {
     sitemapData = await makeSitemap({
       homepage: 'https://site.com/',
       distPath: BUILDPATH,
-      prettyURLs: false
+      prettyURLs: false,
+      failPlugin() {},
     })
     xmlData = await parseXml(SITEMAP_OUTPUT)
   } catch (err) {
@@ -74,12 +77,14 @@ test.serial('Sitemap exclude works correctly', async (t) => {
     sitemapData = await makeSitemap({
       homepage: 'https://site.com/',
       distPath: BUILDPATH,
+      prettyURLs: true,
       exclude: [
         // Path
         EXCLUDE_PATH,
         // Glob pattern
         '**/**/child-one.html'
-      ]
+      ],
+      failPlugin() {},
     })
     xmlData = await parseXml(path.resolve(BUILDPATH, 'sitemap.xml'))
   } catch (err) {
