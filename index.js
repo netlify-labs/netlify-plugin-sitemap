@@ -17,6 +17,6 @@ module.exports = {
       failPlugin: utils.build.failPlugin,
     })
 
-    console.log('Sitemap Built!', data.sitemapFile)
+    console.log('Sitemap Built!', data.sitemapPath)
   },
 }
