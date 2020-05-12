@@ -56,3 +56,16 @@ package = "@netlify/plugin-sitemap"
   # disable pretty URLS and keep `index.html` & trailing `.html` file references in paths
   prettyURLs = false
 ```
+
+When using pretty URLs, missing trailing slashes can be appended by setting the `trailingSlash` option to `true`. This renders `site.com/page-one.html` as `site.com/page-one/`.
+
+```toml
+[[plugins]]
+package = "@netlify/plugin-sitemap"
+
+  [plugins.inputs]
+  buildDir = "public"
+  prettyURLs = true
+  # Append missing trailing slash to pretty URL
+  trailingSlash = true
+```

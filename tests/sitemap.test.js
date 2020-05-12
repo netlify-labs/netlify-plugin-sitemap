@@ -41,6 +41,35 @@ test.serial('Creates Sitemap with all html files', async (t) => {
   ])
 })
 
+test.serial("Creates Sitemap with all html files with trailing slash", async t => {
+  let xmlData;
+  let sitemapData = {};
+  try {
+    sitemapData = await makeSitemap({
+      homepage: "https://site.com/",
+      distPath: BUILDPATH,
+      prettyURLs: true,
+      trailingSlash: true,
+      failBuild() {},
+    });
+    xmlData = await parseXml(SITEMAP_OUTPUT);
+  } catch (err) {
+    console.log(err);
+  }
+  const pages = getPages(xmlData);
+  t.truthy(sitemapData.sitemapPath);
+  t.deepEqual(pages, [
+    "https://site.com/",
+    "https://site.com/page-one/",
+    "https://site.com/page-three/",
+    "https://site.com/page-two/",
+    "https://site.com/children/child-one/",
+    "https://site.com/children/child-two/",
+    "https://site.com/children/grandchildren/grandchild-one/",
+    "https://site.com/children/grandchildren/grandchild-two/",
+  ]);
+});
+
 test.serial('Sitemap pretty urls off works correctly', async (t) => {
   let xmlData
   let sitemapData = {}
