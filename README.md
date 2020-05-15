@@ -43,9 +43,9 @@ package = "@netlify/plugin-sitemap"
 
 ### Pretty URLs
 
-Pretty urls a.k.a. `site.com/index.html` being turned into  `site.com/` is on by default.
+Pretty urls a.k.a. `site.com/index.html` being turned into  `site.com/` is off by default.
 
-To disable this feature set the `prettyURLs` option to `false`
+To enable this feature set the `prettyURLs` option to `true`
 
 ```toml
 [[plugins]]
@@ -53,6 +53,6 @@ package = "@netlify/plugin-sitemap"
 
   [plugins.inputs]
   buildDir = "public"
-  # disable pretty URLS and keep `index.html` & trailing `.html` file references in paths
-  prettyURLs = false
+  # enable pretty URLS and remove `index.html` & trailing `.html` file references in paths
+  prettyURLs = true
 ```
