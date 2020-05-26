@@ -19,6 +19,7 @@
   "files": [
     "index.js",
     "make_sitemap.js",
+    "manifest.yml",
     "package.json",
     "package-lock.json",
     "README.md"
