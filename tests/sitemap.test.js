@@ -21,7 +21,7 @@ test.serial('Creates Sitemap with all html files', async (t) => {
       homepage: 'https://site.com/',
       distPath: BUILDPATH,
       prettyURLs: true,
-      failPlugin() {},
+      failBuild() {},
     })
     xmlData = await parseXml(SITEMAP_OUTPUT)
   } catch (err) {
@@ -49,7 +49,7 @@ test.serial('Sitemap pretty urls off works correctly', async (t) => {
       homepage: 'https://site.com/',
       distPath: BUILDPATH,
       prettyURLs: false,
-      failPlugin() {},
+      failBuild() {},
     })
     xmlData = await parseXml(SITEMAP_OUTPUT)
   } catch (err) {
@@ -84,7 +84,7 @@ test.serial('Sitemap exclude works correctly', async (t) => {
         // Glob pattern
         '**/**/child-one.html'
       ],
-      failPlugin() {},
+      failBuild() {},
     })
     xmlData = await parseXml(path.resolve(BUILDPATH, 'sitemap.xml'))
   } catch (err) {
