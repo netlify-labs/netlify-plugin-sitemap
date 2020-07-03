@@ -17,7 +17,7 @@ module.exports = async function makeSitemap(opts = {}) {
   const urls = paths.map(file => {
     let urlPath = file.startsWith(distPath) ? file.replace(distPath, '') : distPath
     if (prettyURLs) {
-      urlPath = urlPath.replace(/\/index\.html$/, '').replace(/\.html$/, '')
+      urlPath = urlPath.replace(/\/index\.html$/, '').replace(/\.html$/, '/')
     }
     return {
       url: urlPath,
