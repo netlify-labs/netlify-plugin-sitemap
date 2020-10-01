@@ -104,6 +104,48 @@ test.serial('Sitemap exclude works correctly', async (t) => {
   ])
 })
 
+test.serial('Sitemap options works as expected', async (t) => {
+  let xmlData
+  const defaultChangeFreq = "daily";
+  const defaultPriority = 0.9;
+
+  try {
+    await makeSitemap({
+      homepage: 'https://site.com/',
+      distPath: BUILDPATH,
+      prettyURLs: false,
+      failPlugin() {},
+      changeFreq: defaultChangeFreq,
+      priority: defaultPriority,
+    })
+    xmlData = await parseXml(SITEMAP_OUTPUT)
+  } catch (err) {
+    console.log(err)
+  }
+
+  t.is(xmlData.urlset.url[0].changefreq[0], defaultChangeFreq);
+  t.is(xmlData.urlset.url[0].priority[0], defaultPriority.toString());
+})
+
+test.serial('Sitemap default options works as expected', async (t) => {
+  let xmlData
+
+  try {
+    await makeSitemap({
+      homepage: 'https://site.com/',
+      distPath: BUILDPATH,
+      prettyURLs: false,
+      failPlugin() {},
+    })
+    xmlData = await parseXml(SITEMAP_OUTPUT)
+  } catch (err) {
+    console.log(err)
+  }
+
+  t.is(xmlData.urlset.url[0].changefreq[0], 'weekly');
+  t.is(xmlData.urlset.url[0].priority[0], '0.8');
+})
+
 function getPages(data) {
   return data.urlset.url.map((record) => {
     return record.loc[0]

@@ -10,3 +10,9 @@ inputs:
   - name: prettyURLs
     # description: Enable pretty URLS
     default: true
+  - name: changeFreq
+    # description: Sets the default value for "changeFreq"
+    default: 'weekly'
+  - name: priority
+    # description: Sets the default value for "priority"
+    default: 0.8

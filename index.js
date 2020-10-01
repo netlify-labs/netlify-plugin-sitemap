@@ -15,6 +15,8 @@ module.exports = {
       exclude: inputs.exclude,
       prettyURLs: inputs.prettyURLs,
       failPlugin: utils.build.failPlugin,
+      changeFreq: inputs.changeFreq,
+      priority: inputs.priority,
     })
 
     console.log('Sitemap Built!', data.sitemapPath)
