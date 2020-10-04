@@ -1,3 +1,5 @@
+const { join } = require('path')
+
 /* Generates a sitemap */
 const makeSitemap = require('./make_sitemap')
 
@@ -5,7 +7,7 @@ module.exports = {
   onPostBuild: async ({ constants, inputs, utils }) => {
     const baseUrl = inputs.baseUrl || process.env.URL
     // Backwards compat... Correct opt is buildDir
-    const buildDir = inputs.dir || inputs.distPath || inputs.buildDir || constants.PUBLISH_DIR
+    const buildDir = join(process.cwd(), inputs.dir || inputs.distPath || inputs.buildDir || constants.PUBLISH_DIR)
 
     console.log('Creating sitemap from files...')
 
@@ -17,6 +19,8 @@ module.exports = {
       failPlugin: utils.build.failPlugin,
       changeFreq: inputs.changeFreq,
       priority: inputs.priority,
+      trailingSlash: inputs.trailingSlash,
+      failBuild: utils.build.failBuild,
     })
 
     console.log('Sitemap Built!', data.sitemapPath)
