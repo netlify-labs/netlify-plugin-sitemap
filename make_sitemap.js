@@ -6,7 +6,7 @@ const sm = require('sitemap')
 const globby = require('globby')
 
 module.exports = async function makeSitemap(opts = {}) {
-  const { distPath, fileName, homepage, exclude, prettyURLs, failPlugin } = opts
+  const { distPath, fileName, homepage, exclude, prettyURLs, failBuild } = opts
   const htmlFiles = `${distPath}/**/**.html`
   const excludeFiles = (exclude || []).map((filePath) => {
     return `!${filePath.replace(/^!/, '')}`

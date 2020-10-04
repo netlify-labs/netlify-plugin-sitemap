@@ -16,7 +16,7 @@ module.exports = {
       distPath: buildDir,
       exclude: inputs.exclude,
       prettyURLs: inputs.prettyURLs,
-      failPlugin: utils.build.failPlugin,
+      failBuild: utils.build.failBuild,
     })
 
     console.log('Sitemap Built!', data.sitemapPath)
