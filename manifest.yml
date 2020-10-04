@@ -11,5 +11,5 @@ inputs:
     # description: Enable pretty URLS
     default: true
   - name: trailingSlash
-    # Append missing trailing slash to pretty URL
+    # Append trailing slash to pretty URL
     default: false
