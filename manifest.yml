@@ -16,3 +16,6 @@ inputs:
   - name: priority
     # description: Sets the default value for "priority"
     default: 0.8
+  - name: trailingSlash
+    # Append trailing slash to pretty URL
+    default: false
