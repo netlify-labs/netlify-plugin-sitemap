@@ -133,7 +133,7 @@ test.serial('Sitemap exclude works correctly', async (t) => {
   ])
 })
 
-test.serial('Sitemap options works as expected', async (t) => {
+test.serial('Sitemap applies changeFreq and priority when configured', async (t) => {
   let xmlData
   const defaultChangeFreq = "daily";
   const defaultPriority = 0.9;
@@ -156,7 +156,7 @@ test.serial('Sitemap options works as expected', async (t) => {
   t.is(xmlData.urlset.url[0].priority[0], defaultPriority.toString());
 })
 
-test.serial('Sitemap default options works as expected', async (t) => {
+test.serial('Sitemap changefreq and priority defaults to weekly and 0.8', async (t) => {
   let xmlData
 
   try {
