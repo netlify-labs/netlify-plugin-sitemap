@@ -143,7 +143,7 @@ test.serial('Sitemap applies changeFreq and priority when configured', async (t)
       homepage: 'https://site.com/',
       distPath: BUILDPATH,
       prettyURLs: false,
-      failPlugin() {},
+      failBuild() {},
       changeFreq: defaultChangeFreq,
       priority: defaultPriority,
     })
@@ -164,7 +164,7 @@ test.serial('Sitemap changefreq and priority defaults to weekly and 0.8', async 
       homepage: 'https://site.com/',
       distPath: BUILDPATH,
       prettyURLs: false,
-      failPlugin() {},
+      failBuild() {},
     })
     xmlData = await parseXml(SITEMAP_OUTPUT)
   } catch (err) {
