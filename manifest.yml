@@ -12,4 +12,4 @@ inputs:
     default: true
   - name: trailingSlash
     # Append missing trailing slash to pretty URL
-    default: true
+    default: false
