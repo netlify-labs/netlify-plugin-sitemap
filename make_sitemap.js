@@ -23,10 +23,11 @@ module.exports = async function makeSitemap(opts = {}) {
         urlPath += urlPath.endsWith("/") ? "" : "/";
       }
     }
+
     return {
       url: urlPath,
-      changefreq: 'weekly',
-      priority: 0.8,
+      changefreq: opts.changeFreq || 'weekly',
+      priority: opts.priority || 0.8,
       lastmodrealtime: true,
       lastmodfile: file,
     }

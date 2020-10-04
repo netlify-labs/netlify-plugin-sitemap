@@ -69,3 +69,14 @@ package = "@netlify/plugin-sitemap"
   # Append missing trailing slash to pretty URL
   trailingSlash = true
 ```
+
+### Set the default values for "changefreq" and "priority"
+
+```toml
+[[plugins]]
+package = "@netlify/plugin-sitemap"
+
+  [plugins.inputs]
+  changeFreq = "daily"
+  priority = 0.5
+```

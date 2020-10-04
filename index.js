@@ -16,6 +16,8 @@ module.exports = {
       distPath: buildDir,
       exclude: inputs.exclude,
       prettyURLs: inputs.prettyURLs,
+      changeFreq: inputs.changeFreq,
+      priority: inputs.priority,
       trailingSlash: inputs.trailingSlash,
       failBuild: utils.build.failBuild,
     })
