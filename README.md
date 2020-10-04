@@ -71,13 +71,12 @@ package = "@netlify/plugin-sitemap"
 ```
 
 ### Set the default values for "changefreq" and "priority"
+
 ```toml
 [[plugins]]
 package = "@netlify/plugin-sitemap"
 
   [plugins.inputs]
-  #...
   changeFreq = "daily"
   priority = 0.5
-  #...
 ```
