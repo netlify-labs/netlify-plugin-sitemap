@@ -12,6 +12,7 @@ module.exports = {
     console.log('Creating sitemap from files...')
 
     const data = await makeSitemap({
+      fileName: inputs.filePath,
       homepage: baseUrl,
       distPath: trimmedBuildDir,
       exclude: inputs.exclude,

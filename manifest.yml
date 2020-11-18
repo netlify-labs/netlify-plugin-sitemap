@@ -4,6 +4,8 @@ inputs:
     # description: Site's home URL. Defaults to Netlify's SITE URL.
   - name: buildDir
     # description: Publish directory. Defaults to Netlify's publish directory.
+  - name: filePath
+    # description: Output path, relative to publish directory. Default: sitemap.xml
   - name: exclude
     # description: Excluded files.
     default: []
