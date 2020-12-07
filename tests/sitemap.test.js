@@ -3,7 +3,7 @@ const path = require('path')
 const { promisify } = require('util')
 
 const test = require('ava')
-const rimraf = require('rimraf')
+const tempy = require('tempy')
 const { parseString } = require('xml2js')
 
 const pParseString = promisify(parseString)
@@ -11,21 +11,27 @@ const pParseString = promisify(parseString)
 const makeSitemap = require('../make_sitemap.js')
 
 const BUILDPATH = path.resolve(__dirname, './fixtures')
-const SITEMAP_OUTPUT = path.resolve(BUILDPATH, 'sitemap.xml')
 
-test.afterEach.always(() => {
-  // Cleanup runs after each test
-  rimraf.sync(SITEMAP_OUTPUT)
+test.beforeEach((t) => {
+  t.context.fileName = tempy.file({ name: 'sitemap.xml' })
 })
 
-test.serial('Creates Sitemap with all html files', async (t) => {
+test.afterEach(async (t) => {
+  try {
+    await fs.unlink(t.context.fileName)
+  } catch (_) {}
+})
+
+test('Creates Sitemap with all html files', async (t) => {
+  const { fileName } = t.context
   const sitemapData = await makeSitemap({
     homepage: 'https://site.com/',
     distPath: BUILDPATH,
     prettyURLs: true,
     failBuild() {},
+    fileName,
   })
-  const xmlData = await parseXml(SITEMAP_OUTPUT)
+  const xmlData = await parseXml(fileName)
   const pages = getPages(xmlData)
   t.truthy(sitemapData.sitemapPath)
   t.deepEqual(pages, [
@@ -40,15 +46,17 @@ test.serial('Creates Sitemap with all html files', async (t) => {
   ])
 })
 
-test.serial('Creates Sitemap with all html files with trailing slash', async (t) => {
+test('Creates Sitemap with all html files with trailing slash', async (t) => {
+  const { fileName } = t.context
   const sitemapData = await makeSitemap({
     homepage: 'https://site.com/',
     distPath: BUILDPATH,
     prettyURLs: true,
     trailingSlash: true,
     failBuild() {},
+    fileName,
   })
-  const xmlData = await parseXml(SITEMAP_OUTPUT)
+  const xmlData = await parseXml(fileName)
   const pages = getPages(xmlData)
   t.truthy(sitemapData.sitemapPath)
   t.deepEqual(pages, [
@@ -63,14 +71,16 @@ test.serial('Creates Sitemap with all html files with trailing slash', async (t)
   ])
 })
 
-test.serial('Sitemap pretty urls off works correctly', async (t) => {
+test('Sitemap pretty urls off works correctly', async (t) => {
+  const { fileName } = t.context
   const sitemapData = await makeSitemap({
     homepage: 'https://site.com/',
     distPath: BUILDPATH,
     prettyURLs: false,
     failBuild() {},
+    fileName,
   })
-  const xmlData = await parseXml(SITEMAP_OUTPUT)
+  const xmlData = await parseXml(fileName)
   const pages = getPages(xmlData)
   t.truthy(sitemapData.sitemapPath)
   t.deepEqual(pages, [
@@ -85,7 +95,8 @@ test.serial('Sitemap pretty urls off works correctly', async (t) => {
   ])
 })
 
-test.serial('Sitemap exclude works correctly', async (t) => {
+test('Sitemap exclude works correctly', async (t) => {
+  const { fileName } = t.context
   const EXCLUDE_PATH = path.resolve(__dirname, './fixtures/children/grandchildren/grandchild-two.html')
   const sitemapData = await makeSitemap({
     homepage: 'https://site.com/',
@@ -98,8 +109,9 @@ test.serial('Sitemap exclude works correctly', async (t) => {
       '**/**/child-one.html',
     ],
     failBuild() {},
+    fileName,
   })
-  const xmlData = await parseXml(path.resolve(BUILDPATH, 'sitemap.xml'))
+  const xmlData = await parseXml(fileName)
   const pages = getPages(xmlData)
   t.truthy(sitemapData.sitemapPath)
   t.deepEqual(pages, [
@@ -114,7 +126,8 @@ test.serial('Sitemap exclude works correctly', async (t) => {
   ])
 })
 
-test.serial('Sitemap applies changeFreq and priority when configured', async (t) => {
+test('Sitemap applies changeFreq and priority when configured', async (t) => {
+  const { fileName } = t.context
   const defaultChangeFreq = 'daily'
   const defaultPriority = 0.9
 
@@ -125,21 +138,24 @@ test.serial('Sitemap applies changeFreq and priority when configured', async (t)
     failBuild() {},
     changeFreq: defaultChangeFreq,
     priority: defaultPriority,
+    fileName,
   })
-  const xmlData = await parseXml(SITEMAP_OUTPUT)
+  const xmlData = await parseXml(fileName)
 
   t.is(xmlData.urlset.url[0].changefreq[0], defaultChangeFreq)
   t.is(xmlData.urlset.url[0].priority[0], defaultPriority.toString())
 })
 
-test.serial('Sitemap changefreq and priority defaults to weekly and 0.8', async (t) => {
+test('Sitemap changefreq and priority defaults to weekly and 0.8', async (t) => {
+  const { fileName } = t.context
   await makeSitemap({
     homepage: 'https://site.com/',
     distPath: BUILDPATH,
     prettyURLs: false,
     failBuild() {},
+    fileName,
   })
-  const xmlData = await parseXml(SITEMAP_OUTPUT)
+  const xmlData = await parseXml(fileName)
 
   t.is(xmlData.urlset.url[0].changefreq[0], 'weekly')
   t.is(xmlData.urlset.url[0].priority[0], '0.8')
