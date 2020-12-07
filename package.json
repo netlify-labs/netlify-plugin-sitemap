@@ -7,10 +7,22 @@
     "pretest": "ava --reset-cache",
     "test": "ava -v",
     "watch": "npm test -- --watch -v",
+    "format": "run-s format:check-fix:*",
+    "format:ci": "run-s format:check:*",
+    "format:check-fix:lint": "run-e format:check:lint format:fix:lint",
+    "format:check:lint": "cross-env-shell eslint $npm_package_scriptsArgs_eslint",
+    "format:fix:lint": "cross-env-shell eslint --fix $npm_package_scriptsArgs_eslint",
+    "format:check-fix:prettier": "run-e format:check:prettier format:fix:prettier",
+    "format:check:prettier": "cross-env-shell prettier --check $npm_package_scriptsArgs_prettier",
+    "format:fix:prettier": "cross-env-shell prettier --write $npm_package_scriptsArgs_prettier",
     "publish": "git push origin && git push origin --tags",
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
     "release:major": "npm version major && npm publish"
+  },
+  "scriptsArgs": {
+    "eslint": "--ignore-path .gitignore --cache --format=codeframe --max-warnings=0 \"tests/**/*.js\" \"*.js\"",
+    "prettier": "--ignore-path .gitignore --loglevel=warn \"tests/**/*.js\" \"*.js\""
   },
   "keywords": [
     "netlify",
@@ -38,8 +50,15 @@
   "engines": {
     "node": ">=8.12.0"
   },
+  "husky": {
+    "hooks": {
+      "pre-push": "npm run format"
+    }
+  },
   "devDependencies": {
+    "@netlify/eslint-config-node": "^2.0.0",
     "ava": "^2.1.0",
+    "husky": "^4.3.5",
     "rimraf": "^3.0.2",
     "xml2js": "^0.4.23"
   }
