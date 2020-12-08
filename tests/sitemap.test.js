@@ -22,12 +22,27 @@ test.afterEach(async (t) => {
 
 // Test relative and absolute paths
 const CONFIGS = [
-  { distPath: './fixtures', testNamePostfix: 'relative path', cwd: __dirname },
-  { distPath: path.resolve(__dirname, './fixtures'), testNamePostfix: 'absolute path' },
+  {
+    distPath: './fixtures',
+    testNamePostfix: 'relative path',
+    cwd: __dirname,
+    excludePath: './fixtures/children/grandchildren/grandchild-two.html',
+  },
+  {
+    distPath: path.resolve(__dirname, './fixtures'),
+    testNamePostfix: 'absolute path',
+    excludePath: path.resolve(__dirname, './fixtures/children/grandchildren/grandchild-two.html'),
+  },
+  {
+    distPath: '.',
+    testNamePostfix: 'root relative path',
+    cwd: path.join(__dirname, 'fixtures'),
+    excludePath: './children/grandchildren/grandchild-two.html',
+  },
 ]
 
 // eslint-disable-next-line max-lines-per-function
-CONFIGS.forEach(({ distPath, testNamePostfix, cwd }) => {
+CONFIGS.forEach(({ distPath, testNamePostfix, cwd, excludePath }) => {
   test(`Creates Sitemap with all html files - ${testNamePostfix}`, async (t) => {
     const { fileName } = t.context
     const sitemapData = await makeSitemap({
@@ -143,8 +158,6 @@ CONFIGS.forEach(({ distPath, testNamePostfix, cwd }) => {
 
   test(`Sitemap exclude works correctly - ${testNamePostfix}`, async (t) => {
     const { fileName } = t.context
-    const toExclude = './fixtures/children/grandchildren/grandchild-two.html'
-    const excludePath = cwd === undefined ? path.resolve(__dirname, toExclude) : toExclude
     const sitemapData = await makeSitemap({
       homepage: 'https://site.com/',
       distPath,
