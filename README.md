@@ -15,7 +15,8 @@ Note: The `[[plugins]]` line is required for each plugin, even if you have other
 
 ## Configuration
 
-Configure the plugin `buildDir`. Default is the `publish` directory from your site build settings.
+By default, the plugin generates a sitemap based on the `publish` directory configured in your site build settings or `netlify.toml`.
+To change the default behavior use the `buildDir` configuration.
 
 ```toml
 [[plugins]]
