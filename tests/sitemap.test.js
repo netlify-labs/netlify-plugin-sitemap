@@ -3,146 +3,176 @@ const path = require('path')
 const { promisify } = require('util')
 
 const test = require('ava')
-const rimraf = require('rimraf')
+const tempy = require('tempy')
 const { parseString } = require('xml2js')
 
 const pParseString = promisify(parseString)
 
 const makeSitemap = require('../make_sitemap.js')
 
-const BUILDPATH = path.resolve(__dirname, './fixtures')
-const SITEMAP_OUTPUT = path.resolve(BUILDPATH, 'sitemap.xml')
-
-test.afterEach.always(() => {
-  // Cleanup runs after each test
-  rimraf.sync(SITEMAP_OUTPUT)
+test.beforeEach((t) => {
+  t.context.fileName = tempy.file({ name: 'sitemap.xml' })
 })
 
-test.serial('Creates Sitemap with all html files', async (t) => {
-  const sitemapData = await makeSitemap({
-    homepage: 'https://site.com/',
-    distPath: BUILDPATH,
-    prettyURLs: true,
-    failBuild() {},
-  })
-  const xmlData = await parseXml(SITEMAP_OUTPUT)
-  const pages = getPages(xmlData)
-  t.truthy(sitemapData.sitemapPath)
-  t.deepEqual(pages, [
-    'https://site.com/',
-    'https://site.com/page-one',
-    'https://site.com/page-three',
-    'https://site.com/page-two',
-    'https://site.com/children/child-one',
-    'https://site.com/children/child-two',
-    'https://site.com/children/grandchildren/grandchild-one',
-    'https://site.com/children/grandchildren/grandchild-two',
-  ])
+test.afterEach(async (t) => {
+  try {
+    await fs.unlink(t.context.fileName)
+  } catch (_) {}
 })
 
-test.serial('Creates Sitemap with all html files with trailing slash', async (t) => {
-  const sitemapData = await makeSitemap({
-    homepage: 'https://site.com/',
-    distPath: BUILDPATH,
-    prettyURLs: true,
-    trailingSlash: true,
-    failBuild() {},
+// Test relative and absolute paths
+const CONFIGS = [
+  { distPath: './fixtures', testNamePostfix: 'relative path', cwd: __dirname },
+  { distPath: path.resolve(__dirname, './fixtures'), testNamePostfix: 'absolute path' },
+]
+
+// eslint-disable-next-line max-lines-per-function
+CONFIGS.forEach(({ distPath, testNamePostfix, cwd }) => {
+  test(`Creates Sitemap with all html files - ${testNamePostfix}`, async (t) => {
+    const { fileName } = t.context
+    const sitemapData = await makeSitemap({
+      homepage: 'https://site.com/',
+      distPath,
+      prettyURLs: true,
+      failBuild() {},
+      fileName,
+      cwd,
+    })
+    const xmlData = await parseXml(fileName)
+    const pages = getPages(xmlData)
+    t.truthy(sitemapData.sitemapPath)
+    t.deepEqual(pages, [
+      'https://site.com/',
+      'https://site.com/page-one',
+      'https://site.com/page-three',
+      'https://site.com/page-two',
+      'https://site.com/children/child-one',
+      'https://site.com/children/child-two',
+      'https://site.com/children/grandchildren/grandchild-one',
+      'https://site.com/children/grandchildren/grandchild-two',
+    ])
   })
-  const xmlData = await parseXml(SITEMAP_OUTPUT)
-  const pages = getPages(xmlData)
-  t.truthy(sitemapData.sitemapPath)
-  t.deepEqual(pages, [
-    'https://site.com/',
-    'https://site.com/page-one/',
-    'https://site.com/page-three/',
-    'https://site.com/page-two/',
-    'https://site.com/children/child-one/',
-    'https://site.com/children/child-two/',
-    'https://site.com/children/grandchildren/grandchild-one/',
-    'https://site.com/children/grandchildren/grandchild-two/',
-  ])
-})
 
-test.serial('Sitemap pretty urls off works correctly', async (t) => {
-  const sitemapData = await makeSitemap({
-    homepage: 'https://site.com/',
-    distPath: BUILDPATH,
-    prettyURLs: false,
-    failBuild() {},
+  test(`Creates Sitemap with all html files with trailing slash - ${testNamePostfix}`, async (t) => {
+    const { fileName } = t.context
+    const sitemapData = await makeSitemap({
+      homepage: 'https://site.com/',
+      distPath,
+      prettyURLs: true,
+      trailingSlash: true,
+      failBuild() {},
+      fileName,
+      cwd,
+    })
+    const xmlData = await parseXml(fileName)
+    const pages = getPages(xmlData)
+    t.truthy(sitemapData.sitemapPath)
+    t.deepEqual(pages, [
+      'https://site.com/',
+      'https://site.com/page-one/',
+      'https://site.com/page-three/',
+      'https://site.com/page-two/',
+      'https://site.com/children/child-one/',
+      'https://site.com/children/child-two/',
+      'https://site.com/children/grandchildren/grandchild-one/',
+      'https://site.com/children/grandchildren/grandchild-two/',
+    ])
   })
-  const xmlData = await parseXml(SITEMAP_OUTPUT)
-  const pages = getPages(xmlData)
-  t.truthy(sitemapData.sitemapPath)
-  t.deepEqual(pages, [
-    'https://site.com/index.html',
-    'https://site.com/page-one.html',
-    'https://site.com/page-three.html',
-    'https://site.com/page-two.html',
-    'https://site.com/children/child-one.html',
-    'https://site.com/children/child-two.html',
-    'https://site.com/children/grandchildren/grandchild-one.html',
-    'https://site.com/children/grandchildren/grandchild-two.html',
-  ])
-})
 
-test.serial('Sitemap exclude works correctly', async (t) => {
-  const EXCLUDE_PATH = path.resolve(__dirname, './fixtures/children/grandchildren/grandchild-two.html')
-  const sitemapData = await makeSitemap({
-    homepage: 'https://site.com/',
-    distPath: BUILDPATH,
-    prettyURLs: true,
-    exclude: [
-      // Path
-      EXCLUDE_PATH,
-      // Glob pattern
-      '**/**/child-one.html',
-    ],
-    failBuild() {},
+  test(`Sitemap pretty urls off works correctly - ${testNamePostfix}`, async (t) => {
+    const { fileName } = t.context
+    const sitemapData = await makeSitemap({
+      homepage: 'https://site.com/',
+      distPath,
+      prettyURLs: false,
+      failBuild() {},
+      fileName,
+      cwd,
+    })
+    const xmlData = await parseXml(fileName)
+    const pages = getPages(xmlData)
+    t.truthy(sitemapData.sitemapPath)
+    t.deepEqual(pages, [
+      'https://site.com/index.html',
+      'https://site.com/page-one.html',
+      'https://site.com/page-three.html',
+      'https://site.com/page-two.html',
+      'https://site.com/children/child-one.html',
+      'https://site.com/children/child-two.html',
+      'https://site.com/children/grandchildren/grandchild-one.html',
+      'https://site.com/children/grandchildren/grandchild-two.html',
+    ])
   })
-  const xmlData = await parseXml(path.resolve(BUILDPATH, 'sitemap.xml'))
-  const pages = getPages(xmlData)
-  t.truthy(sitemapData.sitemapPath)
-  t.deepEqual(pages, [
-    'https://site.com/',
-    'https://site.com/page-one',
-    'https://site.com/page-three',
-    'https://site.com/page-two',
-    // excluded 'https://site.com/children/child-one.html',
-    'https://site.com/children/child-two',
-    'https://site.com/children/grandchildren/grandchild-one',
-    // excluded 'https://site.com/children/grandchildren/grandchild-two.html'
-  ])
-})
 
-test.serial('Sitemap applies changeFreq and priority when configured', async (t) => {
-  const defaultChangeFreq = 'daily'
-  const defaultPriority = 0.9
+  test(`Sitemap applies changeFreq and priority when configured - ${testNamePostfix}`, async (t) => {
+    const { fileName } = t.context
+    const defaultChangeFreq = 'daily'
+    const defaultPriority = 0.9
 
-  await makeSitemap({
-    homepage: 'https://site.com/',
-    distPath: BUILDPATH,
-    prettyURLs: false,
-    failBuild() {},
-    changeFreq: defaultChangeFreq,
-    priority: defaultPriority,
+    await makeSitemap({
+      homepage: 'https://site.com/',
+      distPath,
+      prettyURLs: false,
+      failBuild() {},
+      changeFreq: defaultChangeFreq,
+      priority: defaultPriority,
+      fileName,
+      cwd,
+    })
+    const xmlData = await parseXml(fileName)
+
+    t.is(xmlData.urlset.url[0].changefreq[0], defaultChangeFreq)
+    t.is(xmlData.urlset.url[0].priority[0], defaultPriority.toString())
   })
-  const xmlData = await parseXml(SITEMAP_OUTPUT)
 
-  t.is(xmlData.urlset.url[0].changefreq[0], defaultChangeFreq)
-  t.is(xmlData.urlset.url[0].priority[0], defaultPriority.toString())
-})
+  test(`Sitemap changefreq and priority defaults to weekly and 0.8 - ${testNamePostfix}`, async (t) => {
+    const { fileName } = t.context
+    await makeSitemap({
+      homepage: 'https://site.com/',
+      distPath,
+      prettyURLs: false,
+      failBuild() {},
+      fileName,
+      cwd,
+    })
+    const xmlData = await parseXml(fileName)
 
-test.serial('Sitemap changefreq and priority defaults to weekly and 0.8', async (t) => {
-  await makeSitemap({
-    homepage: 'https://site.com/',
-    distPath: BUILDPATH,
-    prettyURLs: false,
-    failBuild() {},
+    t.is(xmlData.urlset.url[0].changefreq[0], 'weekly')
+    t.is(xmlData.urlset.url[0].priority[0], '0.8')
   })
-  const xmlData = await parseXml(SITEMAP_OUTPUT)
 
-  t.is(xmlData.urlset.url[0].changefreq[0], 'weekly')
-  t.is(xmlData.urlset.url[0].priority[0], '0.8')
+  test(`Sitemap exclude works correctly - ${testNamePostfix}`, async (t) => {
+    const { fileName } = t.context
+    const toExclude = './fixtures/children/grandchildren/grandchild-two.html'
+    const excludePath = cwd === undefined ? path.resolve(__dirname, toExclude) : toExclude
+    const sitemapData = await makeSitemap({
+      homepage: 'https://site.com/',
+      distPath,
+      prettyURLs: true,
+      exclude: [
+        // Path
+        excludePath,
+        // Glob pattern
+        '**/**/child-one.html',
+      ],
+      failBuild() {},
+      fileName,
+      cwd,
+    })
+    const xmlData = await parseXml(fileName)
+    const pages = getPages(xmlData)
+    t.truthy(sitemapData.sitemapPath)
+    t.deepEqual(pages, [
+      'https://site.com/',
+      'https://site.com/page-one',
+      'https://site.com/page-three',
+      'https://site.com/page-two',
+      // excluded 'https://site.com/children/child-one.html',
+      'https://site.com/children/child-two',
+      'https://site.com/children/grandchildren/grandchild-one',
+      // excluded 'https://site.com/children/grandchildren/grandchild-two.html'
+    ])
+  })
 })
 
 const getPages = (data) => data.urlset.url.map((record) => record.loc[0])
