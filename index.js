@@ -3,12 +3,14 @@ const { env } = require('process')
 
 const makeSitemap = require('./make_sitemap')
 
+const getInputsDir = ({ inputs }) => inputs.dir || inputs.distPath || inputs.buildDir
+
 const getBuildDir = ({ inputs, constants }) => {
   // Backwards compat... Correct opt is buildDir
-  const buildDir = inputs.dir || inputs.distPath || inputs.buildDir || constants.PUBLISH_DIR
+  const buildDir = getInputsDir({ inputs }) || constants.PUBLISH_DIR
   // remove leading / to treat the dir a a relative one
   const trimmedBuildDir = buildDir.startsWith('/') ? buildDir.slice(1) : buildDir
-  return trimmedBuildDir
+  return trimmedBuildDir || '.'
 }
 
 module.exports = {
