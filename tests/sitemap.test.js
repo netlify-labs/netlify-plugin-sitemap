@@ -10,8 +10,6 @@ const pParseString = promisify(parseString)
 
 const makeSitemap = require('../make_sitemap.js')
 
-const BUILDPATH = path.resolve(__dirname, './fixtures')
-
 test.beforeEach((t) => {
   t.context.fileName = tempy.file({ name: 'sitemap.xml' })
 })
@@ -142,37 +140,39 @@ CONFIGS.forEach(({ distPath, testNamePostfix, cwd }) => {
     t.is(xmlData.urlset.url[0].changefreq[0], 'weekly')
     t.is(xmlData.urlset.url[0].priority[0], '0.8')
   })
-})
 
-test('Sitemap exclude works correctly', async (t) => {
-  const { fileName } = t.context
-  const EXCLUDE_PATH = path.resolve(__dirname, './fixtures/children/grandchildren/grandchild-two.html')
-  const sitemapData = await makeSitemap({
-    homepage: 'https://site.com/',
-    distPath: BUILDPATH,
-    prettyURLs: true,
-    exclude: [
-      // Path
-      EXCLUDE_PATH,
-      // Glob pattern
-      '**/**/child-one.html',
-    ],
-    failBuild() {},
-    fileName,
+  test(`Sitemap exclude works correctly - ${testNamePostfix}`, async (t) => {
+    const { fileName } = t.context
+    const toExclude = './fixtures/children/grandchildren/grandchild-two.html'
+    const excludePath = cwd === undefined ? path.resolve(__dirname, toExclude) : toExclude
+    const sitemapData = await makeSitemap({
+      homepage: 'https://site.com/',
+      distPath,
+      prettyURLs: true,
+      exclude: [
+        // Path
+        excludePath,
+        // Glob pattern
+        '**/**/child-one.html',
+      ],
+      failBuild() {},
+      fileName,
+      cwd,
+    })
+    const xmlData = await parseXml(fileName)
+    const pages = getPages(xmlData)
+    t.truthy(sitemapData.sitemapPath)
+    t.deepEqual(pages, [
+      'https://site.com/',
+      'https://site.com/page-one',
+      'https://site.com/page-three',
+      'https://site.com/page-two',
+      // excluded 'https://site.com/children/child-one.html',
+      'https://site.com/children/child-two',
+      'https://site.com/children/grandchildren/grandchild-one',
+      // excluded 'https://site.com/children/grandchildren/grandchild-two.html'
+    ])
   })
-  const xmlData = await parseXml(fileName)
-  const pages = getPages(xmlData)
-  t.truthy(sitemapData.sitemapPath)
-  t.deepEqual(pages, [
-    'https://site.com/',
-    'https://site.com/page-one',
-    'https://site.com/page-three',
-    'https://site.com/page-two',
-    // excluded 'https://site.com/children/child-one.html',
-    'https://site.com/children/child-two',
-    'https://site.com/children/grandchildren/grandchild-one',
-    // excluded 'https://site.com/children/grandchildren/grandchild-two.html'
-  ])
 })
 
 const getPages = (data) => data.urlset.url.map((record) => record.loc[0])
