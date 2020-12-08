@@ -17,13 +17,20 @@ const getPaths = async ({ distPath, exclude, cwd }) => {
   return paths
 }
 
-const getUrlFromFile = ({ file, distPath, prettyURLs, trailingSlash }) => {
-  const url = file.startsWith(distPath) ? file.replace(distPath, '') : distPath
-
-  if (!prettyURLs) {
-    return url
+const normalizeFile = ({ file, distPath }) => {
+  // handle root distPath
+  if (distPath === '.') {
+    return `/${file}`
   }
 
+  if (file.startsWith(distPath)) {
+    return file.replace(distPath, '')
+  }
+
+  return distPath
+}
+
+const prettifyUrl = ({ url, trailingSlash }) => {
   const prettyUrl = url.replace(/\/index\.html$/, '').replace(/\.html$/, '')
 
   if (!trailingSlash) {
@@ -31,6 +38,17 @@ const getUrlFromFile = ({ file, distPath, prettyURLs, trailingSlash }) => {
   }
 
   return ensureTrailingSlash(prettyUrl)
+}
+
+const getUrlFromFile = ({ file, distPath, prettyURLs, trailingSlash }) => {
+  const url = normalizeFile({ file, distPath })
+
+  if (!prettyURLs) {
+    return url
+  }
+
+  const prettyUrl = prettifyUrl({ url, trailingSlash })
+  return prettyUrl
 }
 
 const getUrlsFromPaths = ({ paths, distPath, prettyURLs, trailingSlash, changeFreq, priority, cwd }) => {
