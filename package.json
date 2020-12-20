@@ -52,11 +52,12 @@
   },
   "husky": {
     "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
       "pre-push": "npm run format"
     }
   },
   "devDependencies": {
-    "@netlify/eslint-config-node": "^2.0.0",
+    "@netlify/eslint-config-node": "^2.2.2",
     "ava": "^2.1.0",
     "husky": "^4.3.5",
     "tempy": "^1.0.0",
