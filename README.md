@@ -34,6 +34,19 @@ package = "@netlify/plugin-sitemap"
   buildDir = "public"
 ```
 
+### Writing to a subfolder path
+
+If your site is meant to be served from a subfolder, you can also apply the `filePath` parameter in order to place the `sitemap.xml` in a particular location _within_ in the `buildDir`. NOTE: this parameter must contain the full file name including "sitemap.xml".
+
+```toml
+[[plugins]]
+package = "@netlify/plugin-sitemap"
+
+  [plugins.inputs]
+  buildDir = "public"
+  filePath = "some/subfolder/sitemap.xml"
+```
+
 ### Excluding files from sitemap
 
 ```toml
