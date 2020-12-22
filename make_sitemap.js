@@ -100,8 +100,7 @@ module.exports = async function makeSitemap(opts = {}) {
   // write sitemap to file
   const sitemapFileName = fileName || 'sitemap.xml'
   const sitemapFile = path.resolve(distPath, sitemapFileName)
-  // Ensure dist path
-  await mkdirp(distPath)
+  await mkdirp(path.dirname(sitemapFile))
   // Write sitemap
   await util.promisify(fs.writeFile)(sitemapFile, xml)
   // Return info
