@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.6.1](https://www.github.com/netlify-labs/netlify-plugin-sitemap/compare/v0.6.0...v0.6.1) (2020-12-22)
+
+
+### Bug Fixes
+
+* ensure sitemap file directory exists ([#52](https://www.github.com/netlify-labs/netlify-plugin-sitemap/issues/52)) ([43b1c2d](https://www.github.com/netlify-labs/netlify-plugin-sitemap/commit/43b1c2d678577143fe0ebfeda5fb7835f5b3b376))
+
 ## [0.6.0](https://www.github.com/netlify-labs/netlify-plugin-sitemap/compare/v0.5.2...v0.6.0) (2020-12-21)
 
 
