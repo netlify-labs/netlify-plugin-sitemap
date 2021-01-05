@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.6.2](https://www.github.com/netlify-labs/netlify-plugin-sitemap/compare/v0.6.1...v0.6.2) (2021-01-05)
+
+
+### Bug Fixes
+
+* don't trim constants.PUBLISH_DIR absolute path ([#55](https://www.github.com/netlify-labs/netlify-plugin-sitemap/issues/55)) ([d811dc7](https://www.github.com/netlify-labs/netlify-plugin-sitemap/commit/d811dc7e42cf717dc126b6751069891f1ebcef9f))
+
 ### [0.6.1](https://www.github.com/netlify-labs/netlify-plugin-sitemap/compare/v0.6.0...v0.6.1) (2020-12-22)
 
 
