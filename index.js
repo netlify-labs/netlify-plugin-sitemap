@@ -8,6 +8,10 @@ const getInputsDir = ({ inputs }) => inputs.dir || inputs.distPath || inputs.bui
 const getBuildDir = ({ inputs, constants }) => {
   // Backwards compat... Correct opt is buildDir
   const buildDir = getInputsDir({ inputs }) || constants.PUBLISH_DIR
+  // constants.PUBLISH_DIR is always an absolute path
+  if (buildDir === constants.PUBLISH_DIR) {
+    return buildDir
+  }
   // remove leading / to treat the dir a a relative one
   const trimmedBuildDir = buildDir.startsWith('/') ? buildDir.slice(1) : buildDir
   return trimmedBuildDir || '.'
