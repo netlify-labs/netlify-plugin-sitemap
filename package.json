@@ -14,11 +14,7 @@
     "format:fix:lint": "cross-env-shell eslint --fix $npm_package_scriptsArgs_eslint",
     "format:check-fix:prettier": "run-e format:check:prettier format:fix:prettier",
     "format:check:prettier": "cross-env-shell prettier --check $npm_package_scriptsArgs_prettier",
-    "format:fix:prettier": "cross-env-shell prettier --write $npm_package_scriptsArgs_prettier",
-    "publish": "git push origin && git push origin --tags",
-    "release:patch": "npm version patch && npm publish",
-    "release:minor": "npm version minor && npm publish",
-    "release:major": "npm version major && npm publish"
+    "format:fix:prettier": "cross-env-shell prettier --write $npm_package_scriptsArgs_prettier"
   },
   "scriptsArgs": {
     "eslint": "--ignore-path .gitignore --cache --format=codeframe --max-warnings=0 \"tests/**/*.js\" \"*.js\"",
