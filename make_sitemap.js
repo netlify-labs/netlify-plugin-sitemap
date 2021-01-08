@@ -70,6 +70,19 @@ const DEFAULT_PRIORITY = 0.8
 // 600 sec cache period
 const DEFAULT_CACHE_TIME = 600000
 
+// Creates a sitemap object given the input configuration with URLs and generates XML
+const createSitemapInfo = async function ({ homepage, urls, failBuild }) {
+  try {
+    const hostname = ensureTrailingSlash(homepage)
+    const sitemap = createSitemap({ hostname, cacheTime: DEFAULT_CACHE_TIME, urls })
+    await util.promisify(sitemap.toXML.bind(sitemap))()
+    const xml = sitemap.toString()
+    return { sitemap, xml }
+  } catch (error) {
+    return failBuild('Could not generate XML sitemap', { error })
+  }
+}
+
 module.exports = async function makeSitemap(opts = {}) {
   const {
     distPath,
@@ -87,16 +100,8 @@ module.exports = async function makeSitemap(opts = {}) {
   const paths = await getPaths({ distPath, exclude, cwd })
   const urls = getUrlsFromPaths({ paths, distPath, prettyURLs, trailingSlash, changeFreq, priority, cwd })
 
-  // Creates a sitemap object given the input configuration with URLs
-  const sitemap = createSitemap({ hostname: ensureTrailingSlash(homepage), cacheTime: DEFAULT_CACHE_TIME, urls })
-  // Generates XML
-  try {
-    await util.promisify(sitemap.toXML.bind(sitemap))()
-  } catch (error) {
-    failBuild('Could not generate XML sitemap', { error })
-  }
-  // Gives you a string containing the XML data
-  const xml = sitemap.toString()
+  const { sitemap, xml } = await createSitemapInfo({ homepage, urls, failBuild })
+
   // write sitemap to file
   const sitemapFileName = fileName || 'sitemap.xml'
   const sitemapFile = path.resolve(distPath, sitemapFileName)
