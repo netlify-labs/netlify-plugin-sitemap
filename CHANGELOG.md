@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.6.3](https://www.github.com/netlify-labs/netlify-plugin-sitemap/compare/v0.6.2...v0.6.3) (2021-01-08)
+
+
+### Bug Fixes
+
+* fix error handling during XML parsing ([b250954](https://www.github.com/netlify-labs/netlify-plugin-sitemap/commit/b2509548618c349afd172da37cbd17185f259cc1))
+
 ### [0.6.2](https://www.github.com/netlify-labs/netlify-plugin-sitemap/compare/v0.6.1...v0.6.2) (2021-01-05)
 
 
