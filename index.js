@@ -19,7 +19,7 @@ const getBuildDir = ({ inputs, constants }) => {
 
 module.exports = {
   onPostBuild: async ({ constants, inputs, utils }) => {
-    const baseUrl = inputs.baseUrl || env.URL
+    const baseUrl = inputs.baseUrl || env.NETLIFY_PLUGIN_SITEMAP_BASEURL || env.URL
     const buildDir = getBuildDir({ inputs, constants })
 
     console.log('Creating sitemap from files...')
