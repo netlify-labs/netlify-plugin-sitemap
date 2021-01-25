@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.7.0](https://www.github.com/netlify-labs/netlify-plugin-sitemap/compare/v0.6.2...v0.7.0) (2021-01-25)
+
+
+### Features
+
+* **config:** Add env option for base url ([#60](https://www.github.com/netlify-labs/netlify-plugin-sitemap/issues/60)) ([29970d8](https://www.github.com/netlify-labs/netlify-plugin-sitemap/commit/29970d8afc9dd26e78490883365f5b5f248390cc))
+
+
+### Bug Fixes
+
+* fix error handling during XML parsing ([b250954](https://www.github.com/netlify-labs/netlify-plugin-sitemap/commit/b2509548618c349afd172da37cbd17185f259cc1))
+
 ### [0.6.2](https://www.github.com/netlify-labs/netlify-plugin-sitemap/compare/v0.6.1...v0.6.2) (2021-01-05)
 
 
