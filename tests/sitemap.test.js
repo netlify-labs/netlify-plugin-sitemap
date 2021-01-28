@@ -1,4 +1,4 @@
-const fs = require('fs/promises')
+const { readFile, unlink } = require('fs')
 const path = require('path')
 const { promisify } = require('util')
 
@@ -7,6 +7,8 @@ const tempy = require('tempy')
 const { parseString } = require('xml2js')
 
 const pParseString = promisify(parseString)
+const pUnlink = promisify(unlink)
+const pReadFile = promisify(readFile)
 
 const makeSitemap = require('../make_sitemap.js')
 
@@ -16,7 +18,7 @@ test.beforeEach((t) => {
 
 test.afterEach(async (t) => {
   try {
-    await fs.unlink(t.context.fileName)
+    await pUnlink(t.context.fileName)
   } catch (_) {}
 })
 
@@ -191,7 +193,7 @@ CONFIGS.forEach(({ distPath, testNamePostfix, cwd, excludePath }) => {
 const getPages = (data) => data.urlset.url.map((record) => record.loc[0])
 
 const parseXml = async (filePath) => {
-  const xml = await fs.readFile(filePath, 'utf-8')
+  const xml = await pReadFile(filePath, 'utf-8')
   const parsed = await pParseString(xml)
   return parsed
 }
