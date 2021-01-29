@@ -8,30 +8,25 @@ const { createSitemap } = require('sitemap')
 
 const ensureTrailingSlash = (url) => (url.endsWith('/') ? url : `${url}/`)
 
-const getPaths = async ({ distPath, exclude, cwd }) => {
-  const htmlFiles = `${distPath}/**/**.html`
-  const excludeFiles = (exclude || []).map((filePath) => `!${filePath.replace(/^!/, '')}`)
+const getPaths = async ({ distPath, exclude = [], cwd = '.' }) => {
+  const htmlFiles = `${getRelPath(distPath, cwd)}/**/**.html`
+  const excludeFiles = exclude.map((excludedPath) => `!${getRelPath(excludedPath, cwd).replace(/^!/, '')}`)
 
-  const lookup = [htmlFiles].concat(excludeFiles)
+  const lookup = [htmlFiles, ...excludeFiles]
   const paths = await globby(lookup, { cwd })
   return paths
 }
 
-const normalizeFile = ({ file, distPath }) => {
-  // handle root distPath
-  if (distPath === '.') {
-    return `/${file}`
-  }
-
-  if (file.startsWith(distPath)) {
-    return file.replace(distPath, '')
-  }
-
-  return distPath
+// Globbing patterns cannot use backslashes, but Windows use some. It cannot use
+// Windows drives.
+// Note: this does not apply to `globby` `cwd` option.
+const getRelPath = function (filePath, cwd) {
+  const relPath = path.isAbsolute(filePath) ? path.relative(cwd, filePath) : filePath
+  return relPath.replace(/\\/g, '/')
 }
 
 const prettifyUrl = ({ url, trailingSlash }) => {
-  const prettyUrl = url.replace(/\/index\.html$/, '').replace(/\.html$/, '')
+  const prettyUrl = url.replace(/\/?index\.html$/, '').replace(/\.html$/, '')
 
   if (!trailingSlash) {
     return prettyUrl
@@ -41,7 +36,7 @@ const prettifyUrl = ({ url, trailingSlash }) => {
 }
 
 const getUrlFromFile = ({ file, distPath, prettyURLs, trailingSlash }) => {
-  const url = normalizeFile({ file, distPath })
+  const url = path.relative(distPath, file)
 
   if (!prettyURLs) {
     return url
