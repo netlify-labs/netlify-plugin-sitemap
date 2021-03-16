@@ -46,11 +46,11 @@ const getUrlFromFile = ({ file, distPath, prettyURLs, trailingSlash }) => {
   return prettyUrl
 }
 
-const getUrlsFromPaths = ({ paths, distPath, prettyURLs, trailingSlash, changeFreq, priority, cwd }) => {
+const getUrlsFromPaths = ({ paths, distPath, prettyURLs, trailingSlash, changeFreq, priority, cwd, urlPrefix }) => {
   const urls = paths.map((file) => {
     const url = getUrlFromFile({ file, distPath, prettyURLs, trailingSlash })
     return {
-      url,
+      url: urlPrefix + url,
       changefreq: changeFreq,
       priority,
       lastmodrealtime: true,
@@ -83,6 +83,7 @@ module.exports = async function makeSitemap(opts = {}) {
     distPath,
     fileName,
     homepage,
+    urlPrefix,
     exclude,
     prettyURLs,
     trailingSlash,
@@ -93,7 +94,7 @@ module.exports = async function makeSitemap(opts = {}) {
   } = opts
 
   const paths = await getPaths({ distPath, exclude, cwd })
-  const urls = getUrlsFromPaths({ paths, distPath, prettyURLs, trailingSlash, changeFreq, priority, cwd })
+  const urls = getUrlsFromPaths({ paths, distPath, prettyURLs, trailingSlash, changeFreq, priority, cwd, urlPrefix })
 
   const { sitemap, xml } = await createSitemapInfo({ homepage, urls, failBuild })
 
