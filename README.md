@@ -118,7 +118,7 @@ package = "@netlify/plugin-sitemap"
   baseUrl = "http://example.com"
 ```
 
-> NOTE: Although the above is called base URL this actually ends up being the hostname in the sitemap and as such trying to use a URL like `http://example.com/en/` will results in `http://example.com/`
+>  NOTE: Although the above is called base URL this actually ends up being the hostname in the sitemap and as such trying to use a URL like `http://example.com/en/` will results in `http://example.com/`
 
 ### Add a prefix to the URL
 

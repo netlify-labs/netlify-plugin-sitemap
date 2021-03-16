@@ -49,8 +49,9 @@ const getUrlFromFile = ({ file, distPath, prettyURLs, trailingSlash }) => {
 const getUrlsFromPaths = ({ paths, distPath, prettyURLs, trailingSlash, changeFreq, priority, cwd, urlPrefix }) => {
   const urls = paths.map((file) => {
     const url = getUrlFromFile({ file, distPath, prettyURLs, trailingSlash })
+
     return {
-      url: urlPrefix + url,
+      url: urlPrefix ? urlPrefix + url : url,
       changefreq: changeFreq,
       priority,
       lastmodrealtime: true,
