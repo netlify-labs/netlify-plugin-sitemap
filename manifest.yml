@@ -21,3 +21,6 @@ inputs:
   - name: trailingSlash
     # Append trailing slash to pretty URL
     default: false
+  - name: urlPrefix
+    # Prefix the url with a value such as /en/
+    default: null
