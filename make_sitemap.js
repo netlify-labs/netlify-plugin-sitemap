@@ -51,7 +51,7 @@ const getUrlsFromPaths = ({ paths, distPath, prettyURLs, trailingSlash, changeFr
     const url = getUrlFromFile({ file, distPath, prettyURLs, trailingSlash })
 
     return {
-      url: urlPrefix ? urlPrefix + url : url,
+      url: (urlPrefix ? urlPrefix + url : url).replace('//', '/'),
       changefreq: changeFreq,
       priority,
       lastmodrealtime: true,
