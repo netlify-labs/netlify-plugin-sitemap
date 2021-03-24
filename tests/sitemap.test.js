@@ -177,6 +177,7 @@ CONFIGS.forEach(({ distPath, testNamePostfix, cwd, excludePath }) => {
     const xmlData = await parseXml(fileName)
     const pages = getPages(xmlData)
     t.truthy(sitemapData.sitemapPath)
+
     t.deepEqual(pages, [
       'https://site.com/',
       'https://site.com/page-one',
@@ -186,6 +187,32 @@ CONFIGS.forEach(({ distPath, testNamePostfix, cwd, excludePath }) => {
       'https://site.com/children/child-two',
       'https://site.com/children/grandchildren/grandchild-one',
       // excluded 'https://site.com/children/grandchildren/grandchild-two.html'
+    ])
+  })
+
+  test(`Sitemap urlPrefix works correctly - ${testNamePostfix}`, async (t) => {
+    const { fileName } = t.context
+    const sitemapData = await makeSitemap({
+      homepage: 'https://site.com/',
+      distPath,
+      prettyURLs: true,
+      urlPrefix: 'en/',
+      failBuild() {},
+      fileName,
+      cwd,
+    })
+    const xmlData = await parseXml(fileName)
+    const pages = getPages(xmlData)
+    t.truthy(sitemapData.sitemapPath)
+    t.deepEqual(pages, [
+      'https://site.com/en/',
+      'https://site.com/en/page-one',
+      'https://site.com/en/page-three',
+      'https://site.com/en/page-two',
+      'https://site.com/en/children/child-one',
+      'https://site.com/en/children/child-two',
+      'https://site.com/en/children/grandchildren/grandchild-one',
+      'https://site.com/en/children/grandchildren/grandchild-two',
     ])
   })
 })

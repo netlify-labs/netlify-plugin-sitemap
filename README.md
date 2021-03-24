@@ -102,7 +102,6 @@ package = "@netlify/plugin-sitemap"
   changeFreq = "daily"
   priority = 0.5
 ```
-
 ### Set base URL from environment variable rather than plugin input
 
 You can include an environment variable (`NETLIFY_PLUGIN_SITEMAP_BASEURL`) in your Netlify site to set the base URL that will be used by the plugin. This option is useful if the `baseUrl` plugin input can't be used.
@@ -110,3 +109,27 @@ Example use case: different Netlify sites built from the same repository and don
 
 Priority of base URL assignment:
 plugin input `baseUrl` -> env `NETLIFY_PLUGIN_SITEMAP_BASEURL` -> Netlify site default URL
+
+```toml
+[[plugins]]
+package = "@netlify/plugin-sitemap"
+
+  [plugins.inputs]
+  baseUrl = "http://example.com"
+```
+
+>  NOTE: Although the above is called base URL this actually ends up being the hostname in the sitemap and as such trying to use a URL like `http://example.com/en/` will results in `http://example.com/`
+
+### Add a prefix to the URL
+
+You can include an environment variable (NETLIFY_PLUGIN_SITEMAP_URL_PREFIX) in your Netlify site to set the URL prefix that will be used by the plugin. This option is useful if the urlPrefix plugin input can't be used. Example use case: different Netlify sites built from the same repository and don't/can't have custom domains.
+
+Priority of base URL assignment: plugin input urlPrefix -> env NETLIFY_PLUGIN_SITEMAP_URL_PREFIX
+
+```toml
+[[plugins]]
+package = "@netlify/plugin-sitemap"
+
+  [plugins.inputs]
+  urlPrefix = "/en/"
+```
