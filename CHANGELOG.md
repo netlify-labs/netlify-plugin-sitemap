@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.8.0](https://www.github.com/netlify-labs/netlify-plugin-sitemap/compare/v0.7.0...v0.8.0) (2021-03-24)
+
+
+### Features
+
+* add url prefix ([#70](https://www.github.com/netlify-labs/netlify-plugin-sitemap/issues/70)) ([e30fc70](https://www.github.com/netlify-labs/netlify-plugin-sitemap/commit/e30fc70cc47ea082cb03ccbaa95ff6b2a133b08c))
+* add Windows support ([b7ef7e6](https://www.github.com/netlify-labs/netlify-plugin-sitemap/commit/b7ef7e6574c86dbb2b69b27f4110527e353f726c))
+
 ## [0.7.0](https://www.github.com/netlify-labs/netlify-plugin-sitemap/compare/v0.6.2...v0.7.0) (2021-01-25)
 
 
