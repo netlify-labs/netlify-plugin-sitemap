@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.8.1](https://www.github.com/netlify-labs/netlify-plugin-sitemap/compare/v0.8.0...v0.8.1) (2021-03-30)
+
+
+### Bug Fixes
+
+* don't fail in publish directory is root ([#72](https://www.github.com/netlify-labs/netlify-plugin-sitemap/issues/72)) ([f745568](https://www.github.com/netlify-labs/netlify-plugin-sitemap/commit/f745568acd50fb911d1c67922e42b8abb6ee3430))
+
 ## [0.8.0](https://www.github.com/netlify-labs/netlify-plugin-sitemap/compare/v0.7.0...v0.8.0) (2021-03-24)
 
 
