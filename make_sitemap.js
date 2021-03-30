@@ -9,7 +9,8 @@ const { createSitemap } = require('sitemap')
 const ensureTrailingSlash = (url) => (url.endsWith('/') ? url : `${url}/`)
 
 const getPaths = async ({ distPath, exclude = [], cwd = '.' }) => {
-  const htmlFiles = `${getRelPath(distPath, cwd)}/**/**.html`
+  const relPath = getRelPath(distPath, cwd)
+  const htmlFiles = relPath === '' ? '**/**.html' : `${relPath}/**/**.html`
   const excludeFiles = exclude.map((excludedPath) => `!${getRelPath(excludedPath, cwd).replace(/^!/, '')}`)
 
   const lookup = [htmlFiles, ...excludeFiles]
