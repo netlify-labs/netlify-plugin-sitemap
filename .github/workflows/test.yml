@@ -2,7 +2,7 @@ name: Netlify Plugin Sitemap Test
 
 on:
   push:
-    branches: [master]
+    branches: [main]
     tags: ['*']
   pull_request:
     types: [opened, synchronize, reopened]
