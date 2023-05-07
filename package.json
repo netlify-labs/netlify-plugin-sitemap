@@ -54,7 +54,7 @@
   },
   "devDependencies": {
     "@netlify/eslint-config-node": "^2.2.2",
-    "ava": "^2.1.0",
+    "ava": "^5.2.0",
     "husky": "^4.3.5",
     "tempy": "^0.3.0",
     "xml2js": "^0.4.23"
