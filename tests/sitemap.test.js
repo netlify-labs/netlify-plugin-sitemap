@@ -215,6 +215,35 @@ CONFIGS.forEach(({ distPath, testNamePostfix, cwd, excludePath }) => {
       'https://site.com/en/children/grandchildren/grandchild-two',
     ])
   })
+
+  test(`Generate Sitemap with custom URLs - ${testNamePostfix}`, async (t) => {
+    const { fileName } = t.context
+    const sitemapData = await makeSitemap({
+      homepage: 'https://site.com/',
+      distPath,
+      prettyURLs: true,
+      urlPrefix: 'en/',
+      failBuild() {},
+      fileName,
+      cwd,
+      customUrls: ['/news', '/about'],
+    })
+    const xmlData = await parseXml(fileName)
+    const pages = getPages(xmlData)
+    t.truthy(sitemapData.sitemapPath)
+    t.deepEqual(pages, [
+      'https://site.com/en/',
+      'https://site.com/en/page-one',
+      'https://site.com/en/page-three',
+      'https://site.com/en/page-two',
+      'https://site.com/en/children/child-one',
+      'https://site.com/en/children/child-two',
+      'https://site.com/en/children/grandchildren/grandchild-one',
+      'https://site.com/en/children/grandchildren/grandchild-two',
+      'https://site.com/en/news',
+      'https://site.com/en/about',
+    ])
+  })
 })
 
 const getPages = (data) => data.urlset.url.map((record) => record.loc[0])

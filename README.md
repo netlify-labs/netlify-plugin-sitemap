@@ -133,3 +133,14 @@ package = "@netlify/plugin-sitemap"
   [plugins.inputs]
   urlPrefix = "/en/"
 ```
+### Add custom URLs to the Sitemap
+
+You can include custom URLs to be added to the sitemap by passing an array of custom URLs.
+
+```toml
+[[plugins]]
+package = "@netlify/plugin-sitemap"
+
+  [plugins.inputs]
+  customUrls = ["/news", "/about"]
+```

@@ -36,6 +36,7 @@ module.exports = {
       trailingSlash: inputs.trailingSlash,
       failBuild: utils.build.failBuild,
       urlPrefix,
+      customUrls: inputs.customUrls,
     })
 
     console.log('Sitemap Built!', data.sitemapPath)
